@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro'; import {tools,casesFor} from '../../data.js';
+export function getStaticPaths(){return tools.map(t=>({params:{slug:t.slug},props:{t}}))}
+const {t}=Astro.props; const cs=casesFor(t.slug);
+const jsonld={'@context':'https://schema.org','@type':'SoftwareApplication',name:t.name,applicationCategory:'DeveloperApplication',url:t.url,description:t.desc};
+---
+<Base title={`${t.name} review: pros, cons, pricing | BuildStack`} description={`${t.desc} Pros, cons, pricing and best use cases.`} jsonld={jsonld}>
+<h1>{t.name}</h1><p>{t.desc}</p><p class="muted">{t.cat} · Pricing: {t.price}</p>
+<h2>Pros</h2><ul>{t.pros.map(p=><li>{p}</li>)}</ul><h2>Cons</h2><ul>{t.cons.map(p=><li>{p}</li>)}</ul>
+<h2>Ranked in</h2><ul>{cs.map(u=><li><a href={`/use-cases/${u.slug}/`}>{u.short}</a> (#{u.rank.indexOf(t.slug)+1})</li>)}</ul>
+<p><a href={t.url} rel="noopener" target="_blank">Visit official site →</a></p>
+</Base>

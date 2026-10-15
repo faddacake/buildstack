@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro'; import {useCases,toolBy,UPDATED} from '../../data.js';
+export function getStaticPaths(){return useCases.map(u=>({params:{slug:u.slug},props:{u}}))}
+const {u}=Astro.props; const list=u.rank.map(s=>toolBy[s]);
+const jsonld={'@context':'https://schema.org','@type':'ItemList',name:u.title,itemListOrder:'https://schema.org/ItemListOrderAscending',itemListElement:list.map((t,i)=>({'@type':'ListItem',position:i+1,item:{'@type':'SoftwareApplication',name:t.name,applicationCategory:'DeveloperApplication',url:t.url,description:t.desc}}))};
+---
+<Base title={`${u.title} (2026) | BuildStack`} description={`${u.intro} Ranked: ${list.map(t=>t.name).join(', ')}.`} jsonld={jsonld}>
+<h1>{u.title}</h1><p>{u.intro} <span class="muted">Updated {UPDATED}.</span></p>
+{list.map((t,i)=><div class="card" style="margin:1rem 0"><h2><span class="rank">#{i+1}</span> <a href={`/tools/${t.slug}/`}>{t.name}</a></h2>
+<p>{t.desc}</p><p class="muted">{t.cat} · Pricing: {t.price}</p>
+<p><strong>Pros:</strong> {t.pros.join(' · ')}</p><p><strong>Cons:</strong> {t.cons.join(' · ')}</p>
+<a href={t.url} rel="noopener" target="_blank">Official site →</a></div>)}
+</Base>
