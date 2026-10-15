@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro'; import {useCases,tools,toolBy,UPDATED} from '../data.js';
+const jsonld={'@context':'https://schema.org','@type':'ItemList',name:'AI building tool rankings by use case',itemListElement:useCases.map((u,i)=>({'@type':'ListItem',position:i+1,name:u.title,url:new URL(`/use-cases/${u.slug}/`,Astro.site).href}))};
+---
+<Base title="BuildStack: the best AI tools to build anything, ranked by use case" description="Honest rankings of vibe-coding tools, AI app builders, agent frameworks and MCP servers, by what you want to build." jsonld={jsonld}>
+<h1>The best AI tools to build anything, ranked by use case</h1>
+<p>Pick what you're building. We rank vibe-coding tools, AI app builders, agent frameworks and MCP servers with short, honest pros and cons. Updated {UPDATED}.</p>
+<h2 id="use-cases">Use cases</h2><div class="grid">
+{useCases.map(u=><a class="card" href={`/use-cases/${u.slug}/`}><strong>{u.short}</strong><p class="muted">{u.intro}</p><p class="muted">#1: {toolBy[u.rank[0]].name}</p></a>)}
+</div><p>{tools.length} tools tracked. <a href="/tools/">See all tools →</a></p>
+</Base>
