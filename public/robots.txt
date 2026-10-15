@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://buildstack.vercel.app/sitemap.xml
+Sitemap: https://buildstack-chi.vercel.app/sitemap.xml
