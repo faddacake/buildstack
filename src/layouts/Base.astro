@@ -1,0 +1,31 @@
+---
+const { title, description, jsonld } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>{title}</title><meta name="description" content={description}/>
+<link rel="canonical" href={canonical}/>
+<meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:site_name" content="BuildStack"/>
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/>
+<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt"/>
+{jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)}/>}
+<style is:global>
+body{font-family:system-ui,sans-serif;max-width:860px;margin:0 auto;padding:1rem;color:#111;line-height:1.55}
+a{color:#4f46e5}header,footer{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;padding:.5rem 0}
+header{border-bottom:1px solid #eee}footer{border-top:1px solid #eee;margin-top:3rem;font-size:.9rem;color:#555}
+.logo{font-weight:800;font-size:1.2rem;text-decoration:none;color:#111;margin-right:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+.card{border:1px solid #e5e7eb;border-radius:10px;padding:1rem}.rank{font-weight:800;color:#4f46e5}
+.muted{color:#555;font-size:.9rem}form.nl{display:flex;gap:.5rem;flex-wrap:wrap;background:#f5f5ff;padding:1rem;border-radius:10px}
+input{padding:.5rem;flex:1;min-width:200px}button{padding:.5rem 1rem;background:#4f46e5;color:#fff;border:0;border-radius:6px}
+</style></head><body>
+<header><a class="logo" href="/">BuildStack</a><a href="/#use-cases">Use cases</a><a href="/tools/">All tools</a><a href="/advertise/">Advertise</a></header>
+<main><slot/></main>
+<section><h2>Get the weekly BuildStack update</h2>
+<!-- TODO: newsletter provider not connected yet. Replace action with real endpoint (e.g. Buttondown/Beehiiv/Resend). Nothing is stored right now. -->
+<form class="nl" action="#" method="post" onsubmit="event.preventDefault();this.querySelector('p').hidden=false;">
+<input type="email" name="email" required placeholder="you@example.com" aria-label="Email"/><button>Subscribe</button>
+<p hidden class="muted">Thanks! Signups open very soon. (Newsletter not live yet.)</p></form></section>
+<footer><span>© 2026 BuildStack · Rankings are editorial; sponsored placements are always labeled.</span><a href="/sitemap.xml">Sitemap</a><a href="/llms.txt">llms.txt</a></footer>
+</body></html>
