@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro'; import {tools} from '../../data.js';
 ---
-<Base title="All AI building tools | BuildStack" description="Every AI coding tool, app builder, agent framework and MCP server we track.">
+<Base title="All AI building tools | BuildJury" description="Every AI coding tool, app builder, agent framework and MCP server we track.">
 <h1>All tools ({tools.length})</h1><div class="grid">{tools.map(t=><a class="card" href={`/tools/${t.slug}/`}><strong>{t.name}</strong><p class="muted">{t.cat}</p></a>)}</div>
 </Base>

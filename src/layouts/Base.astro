@@ -6,7 +6,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>{title}</title><meta name="description" content={description}/>
 <link rel="canonical" href={canonical}/>
-<meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:site_name" content="BuildStack"/>
+<meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:site_name" content="BuildJury"/>
 <meta name="twitter:card" content="summary"/><meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/>
 <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt"/>
 {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)}/>}
@@ -19,11 +19,11 @@ header{border-bottom:1px solid #eee}footer{border-top:1px solid #eee;margin-top:
 .card{border:1px solid #e5e7eb;border-radius:10px;padding:1rem}.rank{font-weight:800;color:#4f46e5}
 .muted{color:#555;font-size:.9rem}input{padding:.5rem;flex:1;min-width:200px}button{padding:.5rem 1rem;background:#4f46e5;color:#fff;border:0;border-radius:6px}
 </style></head><body>
-<header><a class="logo" href="/">BuildStack</a><a href="/#use-cases">Use cases</a><a href="/tools/">All tools</a><a href="/advertise/">Advertise</a></header>
+<header><a class="logo" href="/">BuildJury</a><a href="/#use-cases">Use cases</a><a href="/tools/">All tools</a><a href="/advertise/">Advertise</a></header>
 <main><slot/></main>
-<section><h2>Get the weekly BuildStack update</h2>
+<section><h2>Get the weekly BuildJury verdicts</h2>
 <script is:inline async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="9eb13b52-4f92-47da-aed3-e22449cff22d"></script>
 <p class="muted">Form not loading? <a href="https://buildstacks-newsletter.beehiiv.com" rel="noopener">Subscribe on beehiiv →</a></p></section>
-<footer><span>© 2026 BuildStack · Rankings are editorial; sponsored placements are always labeled.</span><a href="/sitemap.xml">Sitemap</a><a href="/llms.txt">llms.txt</a><a href="mailto:buildstack@mail.grokbot.com">Contact: buildstack@mail.grokbot.com</a></footer>
+<footer><span>© 2026 BuildJury · Independent verdicts. Rankings are never for sale; sponsored placements are always labeled.</span><a href="/sitemap.xml">Sitemap</a><a href="/llms.txt">llms.txt</a><a href="mailto:buildstack@mail.grokbot.com">Contact: buildstack@mail.grokbot.com</a></footer>
 <script is:inline type="text/javascript" async src="https://subscribe-forms.beehiiv.com/attribution.js"></script>
 </body></html>
