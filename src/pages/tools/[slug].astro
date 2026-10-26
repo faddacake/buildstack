@@ -1,12 +1,17 @@
 ---
-import Base from '../../layouts/Base.astro'; import {tools,casesFor} from '../../data.js';
+import Base from '../../layouts/Base.astro'; import {tools,toolBy,casesFor,compareFor,newsFor} from '../../data.js'; import {breadcrumb,faqLd,toolFaqs,softwareLd} from '../../seo.js';
 export function getStaticPaths(){return tools.map(t=>({params:{slug:t.slug},props:{t}}))}
-const {t}=Astro.props; const cs=casesFor(t.slug);
-const jsonld={'@context':'https://schema.org','@type':'SoftwareApplication',name:t.name,applicationCategory:'DeveloperApplication',url:t.url,description:t.desc};
+const {t}=Astro.props; const cs=casesFor(t.slug); const cmp=compareFor(t.slug); const news=newsFor(t.slug);
+const alts=[...new Set(cs.flatMap(u=>u.rank))].filter(s=>s!==t.slug).slice(0,6).map(s=>toolBy[s]);
+const crumbs=[['Home','/'],['Tools','/tools/'],[t.name,`/tools/${t.slug}/`]];
+const faqs=toolFaqs(t);
 ---
-<Base title={`${t.name} review: pros, cons, pricing | BuildJury`} description={`${t.desc} Pros, cons, pricing and best use cases.`} jsonld={jsonld}>
+<Base title={`${t.name} review (2026): pros, cons, pricing & alternatives | BuildJury`} description={`${t.desc} Pros, cons, pricing and the best alternatives.`.slice(0,300)} jsonld={[softwareLd(t,Astro.site),breadcrumb(Astro.site,crumbs),faqLd(faqs)]} crumbs={crumbs} faqs={faqs}>
 <h1>{t.name}</h1><p>{t.desc}</p><p class="muted">{t.cat} · Pricing: {t.price}</p>
 <h2>Pros</h2><ul>{t.pros.map(p=><li>{p}</li>)}</ul><h2>Cons</h2><ul>{t.cons.map(p=><li>{p}</li>)}</ul>
-<h2>Ranked in</h2><ul>{cs.map(u=><li><a href={`/use-cases/${u.slug}/`}>{u.short}</a> (#{u.rank.indexOf(t.slug)+1})</li>)}</ul>
+{news.length>0 && <Fragment><h2>Recent changes</h2><ul>{news.map(n=><li><span class="muted">{n.date}</span> {n.text} <a href={n.src} rel="noopener" target="_blank">Source</a></li>)}</ul></Fragment>}
+<h2>Ranked in</h2><ul>{cs.map(u=><li><a href={`/use-cases/${u.slug}/`}>{u.title}</a> (#{u.rank.indexOf(t.slug)+1})</li>)}</ul>
+{cmp.length>0 && <Fragment><h2>Compare</h2><ul>{cmp.map(c=><li><a href={`/compare/${c.slug}/`}>{c.title}</a></li>)}</ul></Fragment>}
+{alts.length>0 && <Fragment><h2>Alternatives to {t.name}</h2><ul>{alts.map(a=><li><a href={`/tools/${a.slug}/`}>{a.name}</a> <span class="muted">({a.cat})</span></li>)}</ul></Fragment>}
 <p><a href={t.url} rel="noopener" target="_blank">Visit official site →</a></p>
 </Base>

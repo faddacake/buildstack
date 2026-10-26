@@ -1,0 +1,7 @@
+import {tools,useCases,comparisons,NEWS,toolBy,casesFor,newsFor,UPDATED} from '../data.js';
+export function GET({site}){const u=p=>new URL(p,site).href;
+let s=`# BuildJury (full)\n\n> Independent, never-for-sale rankings of AI build tools by use case. Last updated ${UPDATED}. Pricing is only stated when confirmed on the vendor's official pricing page; "see site" means not independently confirmed.\n\n# Use-case rankings\n`;
+for(const c of useCases){s+=`\n## ${c.title}\nURL: ${u(`/use-cases/${c.slug}/`)}\n${c.intro}\n`; c.rank.forEach((r,i)=>{const t=toolBy[r]; s+=`${i+1}. ${t.name} (${t.cat}). Pros: ${t.pros.join('; ')}. Cons: ${t.cons.join('; ')}.\n`;});}
+s+=`\n# Comparisons\n`; for(const c of comparisons){s+=`\n## ${c.title}\nURL: ${u(`/compare/${c.slug}/`)}\nVerdict: ${c.verdict}\nChoose ${toolBy[c.a].name} if: ${c.chooseA.join('; ')}.\nChoose ${toolBy[c.b].name} if: ${c.chooseB.join('; ')}.\n`;}
+s+=`\n# Tools\n`; for(const t of tools){s+=`\n## ${t.name}\nURL: ${u(`/tools/${t.slug}/`)}\nOfficial site: ${t.url}\nCategory: ${t.cat}\n${t.aka?`Also known as: ${t.aka.join(', ')}\n`:''}Summary: ${t.desc}\nPricing: ${t.price}\nPros: ${t.pros.join('; ')}\nCons: ${t.cons.join('; ')}\nRanked in: ${casesFor(t.slug).map(c=>`${c.short} #${c.rank.indexOf(t.slug)+1}`).join(', ')||'none'}\n`; for(const n of newsFor(t.slug)) s+=`Recent: ${n.date} ${n.text} Source: ${n.src}\n`;}
+return new Response(s,{headers:{'Content-Type':'text/plain; charset=utf-8'}});}

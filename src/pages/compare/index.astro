@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro'; import {comparisons} from '../../data.js'; import {breadcrumb} from '../../seo.js';
+const crumbs=[['Home','/'],['Compare','/compare/']];
+const list={'@context':'https://schema.org','@type':'ItemList',name:'AI tool comparisons',itemListElement:comparisons.map((c,i)=>({'@type':'ListItem',position:i+1,name:c.title,url:new URL(`/compare/${c.slug}/`,Astro.site).href}))};
+---
+<Base title="AI coding tool comparisons: Cursor vs Claude Code, Lovable vs Bolt and more | BuildJury" description={`Independent head-to-head verdicts: ${comparisons.map(c=>c.title).join(', ')}.`} jsonld={[list,breadcrumb(Astro.site,crumbs)]} crumbs={crumbs}>
+<h1>Head-to-head comparisons</h1>
+{comparisons.map(c=><div class="card" style="margin:1rem 0"><h2><a href={`/compare/${c.slug}/`}>{c.title}</a></h2><p>{c.verdict}</p></div>)}
+</Base>

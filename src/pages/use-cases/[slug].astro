@@ -1,13 +1,20 @@
 ---
-import Base from '../../layouts/Base.astro'; import {useCases,toolBy,UPDATED} from '../../data.js';
+import Base from '../../layouts/Base.astro'; import {useCases,toolBy,comparisons,UPDATED} from '../../data.js'; import {breadcrumb,faqLd,useCaseFaqs,softwareLd} from '../../seo.js';
 export function getStaticPaths(){return useCases.map(u=>({params:{slug:u.slug},props:{u}}))}
 const {u}=Astro.props; const list=u.rank.map(s=>toolBy[s]);
-const jsonld={'@context':'https://schema.org','@type':'ItemList',name:u.title,itemListOrder:'https://schema.org/ItemListOrderAscending',itemListElement:list.map((t,i)=>({'@type':'ListItem',position:i+1,item:{'@type':'SoftwareApplication',name:t.name,applicationCategory:'DeveloperApplication',url:t.url,description:t.desc}}))};
+const crumbs=[['Home','/'],['Use cases','/use-cases/'],[u.short,`/use-cases/${u.slug}/`]];
+const faqs=useCaseFaqs(u);
+const jsonld={'@context':'https://schema.org','@type':'ItemList',name:u.title,description:u.intro,dateModified:UPDATED,itemListOrder:'https://schema.org/ItemListOrderAscending',numberOfItems:list.length,itemListElement:list.map((t,i)=>({'@type':'ListItem',position:i+1,url:new URL(`/tools/${t.slug}/`,Astro.site).href,item:softwareLd(t,Astro.site)}))};
+const related=comparisons.filter(c=>u.rank.includes(c.a)&&u.rank.includes(c.b));
+const others=useCases.filter(x=>x.slug!==u.slug);
 ---
-<Base title={`${u.title} (2026) | BuildJury`} description={`${u.intro} Ranked: ${list.map(t=>t.name).join(', ')}.`} jsonld={jsonld}>
+<Base title={`${u.title} (2026): ${list.slice(0,3).map(t=>t.name).join(' vs ')} | BuildJury`} description={`${u.intro} Ranked: ${list.map(t=>t.name).join(', ')}. Independent, updated ${UPDATED}.`} jsonld={[jsonld,breadcrumb(Astro.site,crumbs),faqLd(faqs)]} crumbs={crumbs} faqs={faqs}>
 <h1>{u.title}</h1><p>{u.intro} <span class="muted">Updated {UPDATED}.</span></p>
+<p><strong>Quick verdict:</strong> {list.slice(0,3).map((t,i)=>`#${i+1} ${t.name}`).join(', ')}.</p>
 {list.map((t,i)=><div class="card" style="margin:1rem 0"><h2><span class="rank">#{i+1}</span> <a href={`/tools/${t.slug}/`}>{t.name}</a></h2>
 <p>{t.desc}</p><p class="muted">{t.cat} · Pricing: {t.price}</p>
 <p><strong>Pros:</strong> {t.pros.join(' · ')}</p><p><strong>Cons:</strong> {t.cons.join(' · ')}</p>
 <a href={t.url} rel="noopener" target="_blank">Official site →</a></div>)}
+{related.length>0 && <Fragment><h2>Head-to-head</h2><ul>{related.map(c=><li><a href={`/compare/${c.slug}/`}>{c.title}</a></li>)}</ul></Fragment>}
+<h2>Other use cases</h2><ul>{others.map(x=><li><a href={`/use-cases/${x.slug}/`}>{x.title}</a></li>)}</ul>
 </Base>

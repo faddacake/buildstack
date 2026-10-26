@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/tools/windsurf", "destination": "/tools/devin-desktop/", "permanent": true },
+    { "source": "/tools/windsurf/", "destination": "/tools/devin-desktop/", "permanent": true }
+  ]
+}

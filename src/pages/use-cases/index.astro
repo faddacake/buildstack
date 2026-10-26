@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro'; import {useCases,toolBy,UPDATED} from '../../data.js'; import {breadcrumb} from '../../seo.js';
+const crumbs=[['Home','/'],['Use cases','/use-cases/']];
+const list={'@context':'https://schema.org','@type':'ItemList',name:'AI build tool rankings by use case',itemListElement:useCases.map((u,i)=>({'@type':'ListItem',position:i+1,name:u.title,url:new URL(`/use-cases/${u.slug}/`,Astro.site).href}))};
+---
+<Base title="AI tool rankings by use case (2026) | BuildJury" description={`${useCases.length} independent rankings: best AI tools for landing pages, SaaS MVPs, mobile apps, internal tools, AI agents, terminal coding agents, MCP servers and more.`} jsonld={[list,breadcrumb(Astro.site,crumbs)]} crumbs={crumbs}>
+<h1>AI tool rankings by use case</h1><p class="muted">Updated {UPDATED}.</p>
+{useCases.map(u=><div class="card" style="margin:1rem 0"><h2><a href={`/use-cases/${u.slug}/`}>{u.title}</a></h2><p>{u.intro}</p><p class="muted">{u.rank.map((s,i)=>`${i+1}. ${toolBy[s].name}`).join(' · ')}</p></div>)}
+</Base>

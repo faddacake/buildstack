@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro'; import {breadcrumb,faqLd,notForSale} from '../../seo.js'; import {UPDATED} from '../../data.js';
+const crumbs=[['Home','/'],['How we rank','/methodology/']];
+const faqs=[notForSale,{q:'How does BuildJury handle pricing?',a:'We only state a price when it is confirmed on the vendor\'s official pricing page. Otherwise we say "see site" and link to the official page.'},{q:'How often are rankings reviewed?',a:`Weekly. Last review: ${UPDATED}.`}];
+---
+<Base title="How BuildJury ranks AI build tools | BuildJury" description="Our methodology: rankings by use case, verified official sources, conservative pricing, and rankings that are never for sale." jsonld={[breadcrumb(Astro.site,crumbs),faqLd(faqs)]} crumbs={crumbs} faqs={faqs}>
+<h1>How we rank</h1>
+<ul>
+<li><strong>By use case.</strong> A tool that is great for a landing page can be the wrong pick for an existing codebase, so we rank per job, not overall.</li>
+<li><strong>Verified sources only.</strong> Facts and changes link to official vendor pages, docs or changelogs. We don't invent numbers, quotes or benchmarks.</li>
+<li><strong>Conservative pricing.</strong> Prices appear only when confirmed on the official pricing page.</li>
+<li><strong>Never for sale.</strong> Sponsors get no say in rankings. Sponsored placements are always labeled.</li>
+<li><strong>Reviewed weekly.</strong> See <a href="/news/">what's new</a>.</li>
+</ul>
+</Base>

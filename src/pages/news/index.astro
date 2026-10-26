@@ -1,0 +1,8 @@
+---
+import Base from '../../layouts/Base.astro'; import {NEWS,toolBy,UPDATED} from '../../data.js'; import {breadcrumb} from '../../seo.js';
+const crumbs=[['Home','/'],["What's new",'/news/']];
+---
+<Base title="What's new in AI coding tools, app builders and MCP servers | BuildJury" description={`Dated, sourced changes to the AI build tools BuildJury ranks: launches, renames and major features. Updated ${UPDATED}.`} jsonld={[breadcrumb(Astro.site,crumbs)]} crumbs={crumbs}>
+<h1>What's new</h1><p>Every entry links to an official source. Updated {UPDATED}.</p>
+<ul>{NEWS.map(n=><li><span class="muted">{n.date}</span> <a href={`/tools/${n.tool}/`}>{toolBy[n.tool].name}</a>: {n.text} <a href={n.src} rel="noopener" target="_blank">Source</a></li>)}</ul>
+</Base>

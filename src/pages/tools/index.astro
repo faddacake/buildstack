@@ -1,6 +1,10 @@
 ---
-import Base from '../../layouts/Base.astro'; import {tools} from '../../data.js';
+import Base from '../../layouts/Base.astro'; import {tools} from '../../data.js'; import {breadcrumb} from '../../seo.js';
+const crumbs=[['Home','/'],['Tools','/tools/']];
+const list={'@context':'https://schema.org','@type':'ItemList',name:'AI building tools tracked by BuildJury',numberOfItems:tools.length,itemListElement:tools.map((t,i)=>({'@type':'ListItem',position:i+1,name:t.name,url:new URL(`/tools/${t.slug}/`,Astro.site).href}))};
+const cats=[...new Set(tools.map(t=>t.cat))].sort();
 ---
-<Base title="All AI building tools | BuildJury" description="Every AI coding tool, app builder, agent framework and MCP server we track.">
-<h1>All tools ({tools.length})</h1><div class="grid">{tools.map(t=><a class="card" href={`/tools/${t.slug}/`}><strong>{t.name}</strong><p class="muted">{t.cat}</p></a>)}</div>
+<Base title={`All ${tools.length} AI building tools: coding agents, app builders, MCP servers | BuildJury`} description={`Every AI coding tool, vibe-coding app builder, agent framework and MCP server BuildJury tracks (${tools.length}), with pros, cons and official links.`} jsonld={[list,breadcrumb(Astro.site,crumbs)]} crumbs={crumbs}>
+<h1>All tools ({tools.length})</h1>
+{cats.map(c=><Fragment><h2>{c}</h2><div class="grid">{tools.filter(t=>t.cat===c).map(t=><a class="card" href={`/tools/${t.slug}/`}><strong>{t.name}</strong><p class="muted">{t.desc}</p></a>)}</div></Fragment>)}
 </Base>
