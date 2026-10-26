@@ -39,6 +39,8 @@ export const tools = [
 ];
 // Dated, sourced changelog shown on the site and in llms.txt. Every src is an official vendor page.
 export const NEWS = [
+ {date:'2026-10-26',tool:'openai-codex',text:'Security warning: Forever Security found a malicious AGENTS.md planted in a real user\'s ~/Downloads folder that told Codex to add an MCP server and install npm malware via ~/.codex/config.toml (over 90% success in its tests). Don\'t run coding agents inside Downloads.',src:'https://forever.security/blog/hijacking-ai-agents-via-downloads-folder/'},
+ {date:'2026-10-26',tool:'claude-code',text:'Security warning: the same researchers showed a planted CLAUDE.md can get Claude Code to reroute its API traffic and leak its OAuth token about half the time. Check unfamiliar instruction files and settings before starting an agent in a folder you didn\'t create.',src:'https://forever.security/blog/hijacking-ai-agents-via-downloads-folder/'},
  {date:'2026-10-23',tool:'microsoft-agent-framework',text:'Microsoft Agent Framework ships Python 1.23 (Oct 22, foundation for MCP 2.x compatibility, with breaking changes) and .NET 1.26 (Oct 23).',src:'https://github.com/microsoft/agent-framework/releases'},
  {date:'2026-10-22',tool:'replit',text:'Replit launches Monitoring Agent: with alerting and auto-fix on, it investigates production issues, validates a fix and can auto-publish it.',src:'https://replit.com/blog/replit-monitoring-agent'},
  {date:'2026-10-22',tool:'cursor',text:'Cursor CLI v2026.10.22: redeploy Cloud Agent environments, team-scoped self-hosted workers, nested AGENTS.md rules applied on edit.',src:'https://cursor.com/docs/cli/changelog'},
