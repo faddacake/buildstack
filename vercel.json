@@ -1,6 +1,25 @@
 {
   "redirects": [
-    { "source": "/tools/windsurf", "destination": "/tools/devin-desktop/", "permanent": true },
-    { "source": "/tools/windsurf/", "destination": "/tools/devin-desktop/", "permanent": true }
+    {
+      "source": "/:path(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "buildstack-chi.vercel.app"
+        }
+      ],
+      "destination": "https://buildjury.com/:path",
+      "statusCode": 301
+    },
+    {
+      "source": "/tools/windsurf",
+      "destination": "/tools/devin-desktop/",
+      "permanent": true
+    },
+    {
+      "source": "/tools/windsurf/",
+      "destination": "/tools/devin-desktop/",
+      "permanent": true
+    }
   ]
 }
