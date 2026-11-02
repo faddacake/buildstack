@@ -17,5 +17,6 @@ export const compareFaqs=c=>{const A=toolBy[c.a],B=toolBy[c.b];return [
  {q:`Which is better, ${A.name} or ${B.name}?`,a:c.verdict},
  {q:`When should I choose ${A.name}?`,a:c.chooseA.join('. ')+'.'},
  {q:`When should I choose ${B.name}?`,a:c.chooseB.join('. ')+'.'},
- {q:`How much do ${A.name} and ${B.name} cost?`,a:`${A.name}: ${A.price}. ${B.name}: ${B.price}. BuildJury only states prices confirmed on official pricing pages.`}];};
+ {q:`How much do ${A.name} and ${B.name} cost?`,a:`${A.name}: ${A.price}. ${B.name}: ${B.price}. BuildJury only states prices confirmed on official pricing pages.`},
+ ...(c.faqs||[])];};
 export const softwareLd=(t,site)=>({'@context':'https://schema.org','@type':'SoftwareApplication',name:t.name,...(t.aka?{alternateName:t.aka}:{}),applicationCategory:'DeveloperApplication',url:t.url,sameAs:t.url,description:t.desc,mainEntityOfPage:abs(`/tools/${t.slug}/`,site)});
