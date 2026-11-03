@@ -1,8 +1,12 @@
 ---
-import Base from '../../layouts/Base.astro'; import {NEWS,toolBy,UPDATED} from '../../data.js'; import {breadcrumb} from '../../seo.js';
-const crumbs=[['Home','/'],["What's new",'/news/']];
+import Base from '../../layouts/Base.astro'; import Record from '../../components/Record.astro';
+import {record,toolBy,UPDATED,fmt} from '../../lib.js'; import {breadcrumb} from '../../seo.js';
+const crumbs=[['Home','/'],['The Record','/news/']];
+const list={'@context':'https://schema.org','@type':'ItemList',name:'The Record: dated changes to AI build tools',numberOfItems:record.length,itemListElement:record.map((n,i)=>({'@type':'ListItem',position:i+1,item:{'@type':'NewsArticle',headline:`${toolBy[n.tool].name}: ${n.text.slice(0,100)}`,datePublished:n.date,url:new URL(`/news/#${n.id}`,Astro.site).href,citation:n.src,author:{'@type':'Organization',name:'BuildJury'},publisher:{'@type':'Organization',name:'BuildJury'},about:{'@type':'SoftwareApplication',name:toolBy[n.tool].name}}}))};
 ---
-<Base title="What's new in AI coding tools, app builders and MCP servers | BuildJury" description={`Dated, sourced changes to the AI build tools BuildJury ranks: launches, renames and major features. Updated ${UPDATED}.`} jsonld={[breadcrumb(Astro.site,crumbs)]} crumbs={crumbs}>
-<h1>What's new</h1><p>Every entry links to an official source. Updated {UPDATED}.</p>
-<ul>{NEWS.map(n=><li><span class="muted">{n.date}</span> <a href={`/tools/${n.tool}/`}>{toolBy[n.tool].name}</a>: {n.text} <a href={n.src} rel="noopener" target="_blank">Source</a></li>)}</ul>
+<Base title="What's new in AI coding tools, app builders and MCP servers | BuildJury" description={`Dated, sourced changes to the AI build tools BuildJury ranks: launches, renames and major features. Updated ${UPDATED}.`} jsonld={[list,breadcrumb(Astro.site,crumbs)]} crumbs={crumbs}>
+<p class="mono small muted">THE RECORD</p>
+<h1>What's new: The Record</h1><p>Every entry is dated, tagged and links to an official or primary source. Updated <time datetime={UPDATED}>{fmt(UPDATED)}</time>. <a href="/news/feed.xml">RSS feed</a></p>
+<p data-rec-note hidden class="lastbar">Filtered. <a href="/news/">Show all</a></p>
+<Record items={record}/>
 </Base>

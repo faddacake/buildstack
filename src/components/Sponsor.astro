@@ -1,0 +1,7 @@
+---
+const {s,label}=Astro.props;
+---
+{s && <aside class="sp" aria-label="Sponsored"><p class="lbl">{label}</p>
+{s.logo && <img src={s.logo} alt="" width="40" height="40" loading="lazy"/>}
+<p><strong>{s.name}</strong>: {s.headline}</p>
+<p><a href={s.href} rel="sponsored noopener" target="_blank">Visit {s.name} →</a> · <a href="/methodology/" class="small">How sponsorship works</a></p></aside>}

@@ -1,0 +1,13 @@
+---
+import {tools,comparisons,FORM_INBOX} from '../lib.js';
+const {a='',b=''}=Astro.props;
+const pairs=Object.fromEntries(comparisons.map(c=>[`${c.a}|${c.b}`,c.slug]));
+const sorted=[...tools].sort((x,y)=>x.name.localeCompare(y.name));
+---
+<form class="card cb" data-cb data-pairs={JSON.stringify(pairs)} data-mail={FORM_INBOX} action="/compare/" method="get">
+<label class="sr" for={`cba${a}`}>First tool</label><select name="a" id={`cba${a}`}><option value="">Tool A…</option>{sorted.map(t=><option value={t.slug} selected={t.slug===a}>{t.name}</option>)}</select>
+<span class="mono">vs</span>
+<label class="sr" for={`cbb${b}`}>Second tool</label><select name="b" id={`cbb${b}`}><option value="">Tool B…</option>{sorted.map(t=><option value={t.slug} selected={t.slug===b}>{t.name}</option>)}</select>
+<button class="btn btn-p" type="submit">Compare</button>
+<p data-cb-out aria-live="polite" style="flex-basis:100%;margin:0"></p>
+</form>

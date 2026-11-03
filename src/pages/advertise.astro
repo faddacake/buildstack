@@ -1,10 +1,30 @@
 ---
-import Base from '../layouts/Base.astro';
+import Base from '../layouts/Base.astro'; import {CONTACT,FORM_INBOX,useCases} from '../lib.js'; import {breadcrumb} from '../seo.js';
+const crumbs=[['Home','/'],['Advertise','/advertise/']];
 ---
-<Base title="Advertise on BuildJury" description="Reach builders, vibe coders and AI creators. Clearly labeled sponsored placements on BuildJury.">
-<h1>Advertise on BuildJury</h1>
-<p>BuildJury readers are actively choosing AI tools to build with. Sponsorship options (coming soon):</p>
-<ul><li>Featured slot on a use-case page (clearly labeled "Sponsored")</li><li>Newsletter sponsorship</li><li>Site-wide banner</li></ul>
-<p>Our verdicts are independent: rankings are never for sale, and sponsors get no say in them. Sponsored placements are always labeled.</p>
-<p>Interested? Email <a href="mailto:buildstack@mail.grokbot.com">buildstack@mail.grokbot.com</a>.</p>
+<Base title="Advertise on BuildJury" description="Reach builders, vibe coders and AI creators. Clearly labeled sponsored placements on BuildJury." jsonld={[breadcrumb(Astro.site,crumbs)]} crumbs={crumbs}>
+<p class="mono small muted">MEDIA KIT</p>
+<h1>Reach builders while they're choosing a tool</h1>
+<p>BuildJury readers are actively choosing AI tools to build with. They arrive on a ruling for the exact job they have, such as an existing codebase, a SaaS MVP or MCP servers.</p>
+<h2>Audience</h2>
+<div class="grid"><div class="card"><p class="mono small muted">MONTHLY VISITORS</p><p class="mono" style="font-size:28px">[MONTHLY VISITORS]</p></div><div class="card"><p class="mono small muted">NEWSLETTER SUBSCRIBERS</p><p class="mono" style="font-size:28px">[NEWSLETTER SUBSCRIBERS]</p></div><div class="card"><p class="mono small muted">TOP RULINGS BY TRAFFIC</p><p>[TOP RULINGS]</p></div></div>
+<h2>Placements</h2>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+<div class="card"><h3>1. Site-wide strip</h3><div class="sp" style="margin:8px 0;padding:8px"><span class="lbl">SPONSORED</span> · Acme: one line, up to 90 characters →</div><p class="small">One sponsor per week, every page. Text only, max 90 characters. Readers can dismiss it.</p></div>
+<div class="card"><h3>2. Featured, not ranked</h3><div class="sp" style="margin:8px 0;padding:8px"><p class="lbl">SPONSORED · Does not affect rank</p><strong>Acme</strong>: one-line pitch. Visit →</div><p class="small">Homepage verdict panel, below the ranked list. Logo, name, one-line pitch and CTA.</p></div>
+<div class="card"><h3>3. Ruling-page card</h3><div class="sp" style="margin:8px 0;padding:8px"><p class="lbl">SPONSORED · Not part of this ruling</p><strong>Acme</strong>: one-line pitch.</div><p class="small">One sponsor per ruling, placed after the full ranked list. Buy by intent: {useCases.slice(0,4).map(u=>u.short).join(', ')} and more.</p></div>
+<div class="card"><h3>4. The Friday Verdict</h3><div class="sp" style="margin:8px 0;padding:8px">Presented by <strong>Acme</strong> (Sponsored)</div><p class="small">A "Presented by" line plus one native block in the weekly newsletter.</p></div>
+</div>
+<section class="qv" aria-labelledby="ind-h"><h2 id="ind-h" style="margin-top:0">Editorial independence</h2><ul>
+<li>Sponsors have no influence on rank or verdicts.</li><li>Every placement is labeled "Sponsored" and never appears inside a ranked list or gets a rank number.</li><li>All sponsor links use <code>rel="sponsored"</code>.</li><li>We reserve the right to refuse any sponsor.</li><li>Sponsored tools are reviewed by the same rules as everyone else.</li></ul></section>
+<h2>Rates on request</h2>
+<p>Email <span class="mono">{CONTACT}</span>, or send the form below (it opens your email app).</p>
+<form class="form" action={`mailto:${FORM_INBOX}?subject=BuildJury%20sponsorship%20inquiry`} method="post" enctype="text/plain">
+<label>Name<input name="name" required autocomplete="name"/></label>
+<label>Company<input name="company" required autocomplete="organization"/></label>
+<label>Product URL<input name="url" type="url" required/></label>
+<fieldset><legend>Placements of interest</legend><label><input type="checkbox" name="placement" value="strip"/> Site-wide strip</label><label><input type="checkbox" name="placement" value="featured"/> Featured, not ranked</label><label><input type="checkbox" name="placement" value="ruling"/> Ruling-page card</label><label><input type="checkbox" name="placement" value="newsletter"/> Friday Verdict</label></fieldset>
+<label>Budget range<select name="budget"><option>Not sure yet</option><option>Under $500</option><option>$500 to $2,000</option><option>$2,000+</option></select></label>
+<label>Dates<input name="dates" placeholder="e.g. weeks of Dec 7 and Dec 14"/></label>
+<button class="btn btn-p" type="submit">Send inquiry</button></form>
 </Base>

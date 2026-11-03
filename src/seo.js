@@ -20,3 +20,9 @@ export const compareFaqs=c=>{const A=toolBy[c.a],B=toolBy[c.b];return [
  {q:`How much do ${A.name} and ${B.name} cost?`,a:`${A.name}: ${A.price}. ${B.name}: ${B.price}. BuildJury only states prices confirmed on official pricing pages.`},
  ...(c.faqs||[])];};
 export const softwareLd=(t,site)=>({'@context':'https://schema.org','@type':'SoftwareApplication',name:t.name,...(t.aka?{alternateName:t.aka}:{}),applicationCategory:'DeveloperApplication',url:t.url,sameAs:t.url,description:t.desc,mainEntityOfPage:abs(`/tools/${t.slug}/`,site)});
+// Redesign additions
+const ORG_NAME='BuildJury';
+export const orgLd=site=>({'@context':'https://schema.org','@type':'Organization',name:ORG_NAME,url:site.href,logo:abs('/icon-512.png',site),sameAs:[],contactPoint:{'@type':'ContactPoint',contactType:'editorial and advertising',url:abs('/about/',site)}});
+export const websiteLd=site=>({'@context':'https://schema.org','@type':'WebSite',name:ORG_NAME,url:site.href,description:'Independent, never-for-sale rankings of AI coding tools, vibe-coding app builders, agent frameworks and MCP servers by use case.',publisher:{'@type':'Organization',name:ORG_NAME,url:site.href},potentialAction:{'@type':'SearchAction',target:{'@type':'EntryPoint',urlTemplate:abs('/tools/',site)+'?q={search_term_string}'},'query-input':'required name=search_term_string'}});
+export const personLd=(name)=>({'@type':'Person',name,url:'https://buildjury.com/about/'});
+export const articleLd=(site,{headline,description,path,published,modified,author,about,citation})=>({'@context':'https://schema.org','@type':'Article',headline,description,mainEntityOfPage:abs(path,site),datePublished:published,dateModified:modified,author:personLd(author),publisher:{'@type':'Organization',name:ORG_NAME,url:site.href,logo:{'@type':'ImageObject',url:abs('/icon-512.png',site)}},image:abs(`/og/${path.replace(/^\/|\/$/g,'').replace(/\//g,'__')||'home'}.png`,site),...(about?{about}:{}),...(citation?{citation}:{})});

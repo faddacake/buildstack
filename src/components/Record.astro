@@ -1,0 +1,7 @@
+---
+import {toolBy,TAGS,fmt} from '../lib.js';
+const {items,tabs=true,showTool=true}=Astro.props;
+---
+{tabs && <div class="tabs" role="group" aria-label="Filter The Record">{[['all','All'],['security','Security'],['pricing','Pricing'],['release','Releases'],['watching','Watching']].map(([k,l],i)=><button type="button" class="chip" data-recf={k} aria-pressed={i===0?'true':'false'} hidden>{l}</button>)}</div>}
+<ol class="rec" data-rec>{items.map(n=><li id={n.id} data-tag={n.tag} data-tool={n.tool} data-date={n.date}><time datetime={n.date}>{fmt(n.date)}</time><div><span class={`tag tag-${n.tag}`}>{TAGS[n.tag]}</span> {showTool && <a href={`/tools/${n.tool}/`}><strong>{toolBy[n.tool].name}</strong></a>}{showTool?': ':' '}{n.text} <a href={n.src} rel="noopener" target="_blank">Source</a> · <a href={`/news/#${n.id}`} class="small muted">Link</a></div></li>)}</ol>
+<p data-rec-empty hidden class="muted">Nothing here yet. Star tools with ☆ Watch to track them.</p>

@@ -1,25 +1,32 @@
 ---
-import Base from '../../layouts/Base.astro'; import {comparisons,toolBy,casesFor,newsFor,UPDATED} from '../../data.js'; import {breadcrumb,faqLd,compareFaqs,softwareLd} from '../../seo.js';
+import Base from '../../layouts/Base.astro'; import Record from '../../components/Record.astro'; import CompareBuilder from '../../components/CompareBuilder.astro';
+import {comparisons,toolBy,casesFor} from '../../data.js'; import {record,EDITOR,UPDATED,AS_OF} from '../../lib.js'; import {breadcrumb,faqLd,compareFaqs,softwareLd,articleLd} from '../../seo.js';
 export function getStaticPaths(){return comparisons.map(c=>({params:{slug:c.slug},props:{c}}))}
 const {c}=Astro.props; const A=toolBy[c.a], B=toolBy[c.b];
 const crumbs=[['Home','/'],['Compare','/compare/'],[c.title,`/compare/${c.slug}/`]];
 const faqs=compareFaqs(c);
 const shared=casesFor(c.a).filter(u=>u.rank.includes(c.b));
-const article={'@context':'https://schema.org','@type':'Article',headline:`${c.title} (2026)`,description:c.verdict,...(c.sources?{citation:c.sources}:{}),dateModified:UPDATED,author:{'@type':'Organization',name:'BuildJury'},publisher:{'@type':'Organization',name:'BuildJury'},about:[softwareLd(A,Astro.site),softwareLd(B,Astro.site)]};
+const article=articleLd(Astro.site,{headline:`${c.title} (2026)`,description:c.verdict,path:`/compare/${c.slug}/`,published:UPDATED,modified:UPDATED,author:EDITOR,about:[softwareLd(A,Astro.site),softwareLd(B,Astro.site)],citation:c.sources});
 const rows=[['Category',A.cat,B.cat],['Pricing',A.price,B.price],['Pros',A.pros.join('; '),B.pros.join('; ')],['Cons',A.cons.join('; '),B.cons.join('; ')]];
+const news=record.filter(n=>n.tool===c.a||n.tool===c.b);
 ---
-<Base title={c.seoTitle||`${c.title} (2026): which should you use? | BuildJury`} description={c.seoDesc||c.verdict.slice(0,155)} jsonld={[article,breadcrumb(Astro.site,crumbs),faqLd(faqs)]} crumbs={crumbs} faqs={faqs}>
-<h1>{c.title}</h1><p class="muted">Independent verdict · Updated {UPDATED}</p>
+<Base title={c.seoTitle||`${c.title} (2026): which should you use? | BuildJury`} description={c.seoDesc||c.verdict.slice(0,155)} jsonld={[article,breadcrumb(Astro.site,crumbs),faqLd(faqs)]} crumbs={crumbs} faqs={faqs} reviewed ogTitle={c.title}>
+<p class="mono small muted">HEAD-TO-HEAD</p>
+<h1>{c.title}</h1>
+<p class="byline">By {EDITOR} · {AS_OF}</p>
+<section class="qv" aria-label="Verdict"><h2 style="margin:0 0 6px;font-size:22px">Verdict</h2><p><strong>{c.verdict}</strong></p>
+<div class="cols"><div><h3 class="mono small" style="font-family:var(--font-mono);font-size:14px">PICK {A.name.toUpperCase()} IF…</h3><ul>{c.chooseA.map(x=><li>{x}</li>)}</ul></div><div><h3 class="mono small" style="font-family:var(--font-mono);font-size:14px">PICK {B.name.toUpperCase()} IF…</h3><ul>{c.chooseB.map(x=><li>{x}</li>)}</ul></div></div></section>
 {c.intro && <p>{c.intro}</p>}
-<p><strong>Verdict:</strong> {c.verdict}</p>
-{c.costTable && <Fragment><h2>Cost side by side</h2><table><thead><tr><th></th><th>{A.name}</th><th>{B.name}</th></tr></thead><tbody>{c.costTable.map(r=><tr><th>{r[0]}</th><td>{r[1]}</td><td>{r[2]}</td></tr>)}</tbody></table><p class="muted">Prices in USD, before tax, from the official pricing pages listed under Sources.</p></Fragment>}
-<table><thead><tr><th></th><th><a href={`/tools/${A.slug}/`}>{A.name}</a></th><th><a href={`/tools/${B.slug}/`}>{B.name}</a></th></tr></thead>
-<tbody>{rows.map(r=><tr><th>{r[0]}</th><td>{r[1]}</td><td>{r[2]}</td></tr>)}</tbody></table>
+{c.costTable && <Fragment><h2>Cost side by side</h2><div class="tscroll"><table><thead><tr><th scope="col"></th><th scope="col">{A.name}</th><th scope="col">{B.name}</th></tr></thead><tbody>{c.costTable.map(r=><tr><th scope="row">{r[0]}</th><td>{r[1]}</td><td>{r[2]}</td></tr>)}</tbody></table></div><p class="muted small">Prices in USD, before tax, from the official pricing pages listed under Sources.</p></Fragment>}
+<h2>Side by side</h2>
+<div class="tscroll"><table><thead><tr><th scope="col"></th><th scope="col"><a href={`/tools/${A.slug}/`}>{A.name}</a></th><th scope="col"><a href={`/tools/${B.slug}/`}>{B.name}</a></th></tr></thead>
+<tbody>{rows.map(r=><tr><th scope="row">{r[0]}</th><td>{r[1]}</td><td>{r[2]}</td></tr>)}</tbody></table></div>
 <h2>Choose {A.name} if…</h2><ul>{c.chooseA.map(x=><li>{x}</li>)}</ul>
 <h2>Choose {B.name} if…</h2><ul>{c.chooseB.map(x=><li>{x}</li>)}</ul>
-{shared.length>0 && <Fragment><h2>Where they rank</h2><ul>{shared.map(u=><li><a href={`/use-cases/${u.slug}/`}>{u.title}</a>: {A.name} #{u.rank.indexOf(c.a)+1}, {B.name} #{u.rank.indexOf(c.b)+1}</li>)}</ul></Fragment>}
-{[...newsFor(c.a),...newsFor(c.b)].length>0 && <Fragment><h2>Recent changes</h2><ul>{[...newsFor(c.a),...newsFor(c.b)].map(n=><li><span class="muted">{n.date}</span> {toolBy[n.tool].name}: {n.text} <a href={n.src} rel="noopener" target="_blank">Source</a></li>)}</ul></Fragment>}
+{shared.length>0 && <Fragment><h2>Where they rank</h2><ul>{shared.map(u=><li><a href={`/use-cases/${u.slug}/`}>{u.title}</a>: <span class="mono">{A.name} #{u.rank.indexOf(c.a)+1}, {B.name} #{u.rank.indexOf(c.b)+1}</span></li>)}</ul></Fragment>}
+{news.length>0 && <Fragment><h2>Recent changes</h2><Record items={news} tabs={false}/></Fragment>}
 {c.sources && <Fragment><h2>Sources</h2><ul>{c.sources.map(u=><li><a href={u} rel="noopener" target="_blank">{u}</a></li>)}</ul></Fragment>}
 <p>Official sites: <a href={A.url} rel="noopener" target="_blank">{A.name}</a> · <a href={B.url} rel="noopener" target="_blank">{B.name}</a></p>
+<h2>Compare another pair</h2><CompareBuilder a={c.a} b={c.b}/>
 <p><a href="/compare/">More comparisons →</a></p>
 </Base>

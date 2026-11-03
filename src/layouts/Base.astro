@@ -1,38 +1,64 @@
 ---
-const { title, description, jsonld, crumbs, faqs } = Astro.props;
+import '../styles/global.css';
+import {sponsorFor,CONTACT,NEWSLETTER,SAMPLE_ISSUE,UPDATED,fmt} from '../lib.js';
+const { title, description, jsonld, crumbs, faqs, reviewed, ogTitle } = Astro.props;
 const last = crumbs ? crumbs.length - 1 : 0;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogKey = Astro.url.pathname.replace(/^\/|\/$/g,'').replace(/\//g,'__') || 'home';
+const ogImage = new URL(`/og/${ogKey}.png`, Astro.site).href;
 const lds = (Array.isArray(jsonld) ? jsonld : jsonld ? [jsonld] : []);
+const strip = sponsorFor('strip');
+const presented = sponsorFor('newsletter');
 ---
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>{title}</title><meta name="description" content={description}/>
 <link rel="canonical" href={canonical}/>
+<meta name="robots" content="index,follow,max-image-preview:large"/>
 <meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:site_name" content="BuildJury"/>
-<meta name="twitter:card" content="summary"/><meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/>
+<meta property="og:image" content={ogImage}/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content={`BuildJury: ${ogTitle||title}`}/>
+<meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/><meta name="twitter:image" content={ogImage}/>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"/><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"/><link rel="apple-touch-icon" href="/apple-touch-icon.png"/><link rel="manifest" href="/manifest.webmanifest"/>
+<meta name="theme-color" content="#F5F6F8" media="(prefers-color-scheme: light)"/><meta name="theme-color" content="#0E1117" media="(prefers-color-scheme: dark)"/>
+<link rel="alternate" type="application/rss+xml" title="The Record (BuildJury)" href="/news/feed.xml"/>
 <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt"/>
 <link rel="sitemap" type="application/xml" href="/sitemap.xml"/>
+<link rel="preload" href="/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin/><link rel="preload" href="/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin/>
+<script is:inline>try{var t=localStorage.getItem('bj_theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;if(localStorage.getItem('bj_strip_until')>Date.now())document.documentElement.classList.add('strip-off')}catch(e){}</script>
 {lds.map(l=><script type="application/ld+json" set:html={JSON.stringify(l)}/>)}
-<style is:global>
-body{font-family:system-ui,sans-serif;max-width:860px;margin:0 auto;padding:1rem;color:#111;line-height:1.55}
-a{color:#4f46e5}header,footer{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;padding:.5rem 0}
-header{border-bottom:1px solid #eee}footer{border-top:1px solid #eee;margin-top:3rem;font-size:.9rem;color:#555}
-.logo{font-weight:800;font-size:1.2rem;text-decoration:none;color:#111;margin-right:auto}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
-.card{border:1px solid #e5e7eb;border-radius:10px;padding:1rem}.rank{font-weight:800;color:#4f46e5}
-.muted{color:#555;font-size:.9rem}input{padding:.5rem;flex:1;min-width:200px}button{padding:.5rem 1rem;background:#4f46e5;color:#fff;border:0;border-radius:6px}
-nav.crumbs{font-size:.85rem;color:#555;margin:.75rem 0}nav.crumbs a{color:#555}
-table{border-collapse:collapse;width:100%}th,td{border:1px solid #e5e7eb;padding:.5rem;text-align:left;vertical-align:top}
-details{margin:.5rem 0}summary{font-weight:600;cursor:pointer}
-</style></head><body>
-<header><a class="logo" href="/">BuildJury</a><a href="/use-cases/">Use cases</a><a href="/compare/">Compare</a><a href="/tools/">All tools</a><a href="/news/">What's new</a><a href="/advertise/">Advertise</a></header>
-{crumbs && <nav class="crumbs" aria-label="Breadcrumb">{crumbs.map(([n,p],i)=>(i === last ? <span>{n}</span> : <span><a href={p}>{n}</a> › </span>))}</nav>}
-<main><slot/>
-{faqs && <section><h2>FAQ</h2>{faqs.map(f=><details><summary>{f.q}</summary><p>{f.a}</p></details>)}</section>}
+</head><body>
+<a class="skip" href="#main">Skip to content</a>
+{strip && <div class="sstrip" id="sstrip"><div class="wrap"><a href={strip.href} rel="sponsored noopener" target="_blank"><strong>SPONSORED</strong> · {strip.name}: {strip.headline.slice(0,90)} →</a><button type="button" data-dismiss-strip aria-label="Dismiss sponsored message">×</button></div></div>}
+<header class="hdr"><div class="wrap">
+<a class="logo" href="/">Build<span>Jury</span></a>
+<nav class="nav" id="nav" aria-label="Main"><a href="/use-cases/">Rulings</a><a href="/compare/">Compare</a><a href="/tools/">All tools</a><a href="/news/">The Record</a><a href="/methodology/">How we rank</a></nav>
+<a class="btn" href="/tools/" data-palette aria-label="Search (Ctrl+K)"><span aria-hidden="true">⌕</span><span class="hide-sm">Search <kbd>/</kbd></span></a>
+<a class="btn btn-p btn-nl" href="#friday-verdict"><span class="hide-xs">Get the </span>Friday Verdict</a>
+<button class="btn menu-btn" type="button" aria-expanded="false" aria-controls="nav" data-menu>Menu</button>
+</div></header>
+<div class="wrap">
+{crumbs && <nav class="crumbs" aria-label="Breadcrumb"><ol>{crumbs.map(([n,p],i)=>(i === last ? <li aria-current="page">{n}</li> : <li><a href={p}>{n}</a></li>))}</ol></nav>}
+<main id="main">
+{reviewed && <p class="reviewed">Last reviewed <time datetime={UPDATED}>{fmt(UPDATED)}</time> · Reviewed weekly</p>}
+<slot/>
+{faqs && <section aria-labelledby="faq-h"><h2 id="faq-h">FAQ</h2>{faqs.map(f=><details><summary>{f.q}</summary><p>{f.a}</p></details>)}</section>}
 </main>
-<section><h2>Get the weekly BuildJury verdicts</h2>
-<script is:inline async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="9eb13b52-4f92-47da-aed3-e22449cff22d"></script>
-<p class="muted">Form not loading? <a href="https://buildstacks-newsletter.beehiiv.com" rel="noopener">Subscribe on beehiiv →</a></p></section>
-<footer><span>© 2026 BuildJury · Independent verdicts. Rankings are never for sale; sponsored placements are always labeled.</span><a href="/methodology/">How we rank</a><a href="/sitemap.xml">Sitemap</a><a href="/llms.txt">llms.txt</a><a href="mailto:buildstack@mail.grokbot.com">Contact: buildstack@mail.grokbot.com</a></footer>
-<script is:inline type="text/javascript" async src="https://subscribe-forms.beehiiv.com/attribution.js"></script>
+<section class="nl" id="friday-verdict" aria-labelledby="nl-h">
+<div><p class="mono small muted">EVERY FRIDAY · FREE</p><h2 id="nl-h">The Friday Verdict</h2>
+<ul><li>Ranking changes</li><li>Pricing changes</li><li>Security notices for the tools you use</li></ul>
+<p class="small"><a href={SAMPLE_ISSUE} rel="noopener">Read a sample issue →</a></p>
+{presented && <p class="small">Presented by <a href={presented.href} rel="sponsored noopener" target="_blank">{presented.name}</a> <span class="mono">(Sponsored)</span></p>}
+</div>
+<div><div id="bh-slot" data-beehiiv-src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="9eb13b52-4f92-47da-aed3-e22449cff22d" style="min-height:120px"></div>
+<p class="muted small">Form not loading? <a href={NEWSLETTER} rel="noopener">Subscribe on beehiiv →</a></p></div>
+</section>
+<footer class="ftr">
+<p><strong>Rankings are never for sale; sponsored placements are always labeled.</strong></p>
+<nav aria-label="Footer"><a href="/methodology/">How we rank</a><a href="/about/">About</a><a href="/advertise/">Advertise</a><a href="/sitemap.xml">Sitemap</a><a href="/llms.txt">llms.txt</a><a href="/news/feed.xml">RSS</a><span>Contact: <span class="mono">{CONTACT}</span></span></nav>
+<p><label>Theme <select id="theme" aria-label="Color theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label></p>
+<p class="small">Your watchlist is stored only in your browser. © 2026 BuildJury · Independent verdicts.</p>
+</footer>
+</div>
+<dialog class="pal" id="pal" aria-label="Search BuildJury"><form method="dialog"><label class="sr" for="palq">Search tools, rulings and comparisons</label><input id="palq" type="search" placeholder="Search tools, rulings, comparisons…" autocomplete="off"/></form><ul id="palr" role="listbox"></ul><p class="small muted">Enter to open · Esc to close</p></dialog>
+<script is:inline src="/app.js" defer></script>
 </body></html>
