@@ -23,7 +23,7 @@ const seq=a=>a.slice(0,-1).join(', ')+' and '+a[a.length-1];
 <h2 style="margin:12px 0 6px;font-size:22px">Quick verdict</h2>
 <p class="top">{list.slice(0,3).map((t,i)=>`#${i+1} ${t.name}`).join(', ')}</p>
 <p>Pick <a href={`/tools/${list[0].slug}/`}>{list[0].name}</a> first: {list[0].desc} {list[1] && <Fragment>Runner-up <a href={`/tools/${list[1].slug}/`}>{list[1].name}</a>: {list[1].desc}</Fragment>}</p>
-<p class="small muted">Last reviewed <time datetime={UPDATED}>{fmt(UPDATED)}</time></p>
+<p class="small muted">Last updated <time datetime={UPDATED}>{fmt(UPDATED)}</time></p>
 </section>
 <h2>The ranking</h2>
 <ol class="ranked">{list.map((t,i)=><li><article class="entry" aria-labelledby={`e-${t.slug}`}>
