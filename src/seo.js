@@ -6,7 +6,7 @@ export const notForSale={q:'Are BuildJury rankings paid placements?',a:'No. Buil
 export const useCaseFaqs=u=>{const l=u.rank.map(s=>toolBy[s]);return [
  {q:`What is the best tool for ${u.short.toLowerCase()} in 2026?`,a:`BuildJury's current #1 for ${u.short.toLowerCase()} is ${l[0].name}: ${l[0].desc} Runners-up: ${l.slice(1,4).map(t=>t.name).join(', ')}.`},
  {q:`What are the main alternatives to ${l[0].name} for ${u.short.toLowerCase()}?`,a:`The other ranked options are ${l.slice(1).map((t,i)=>`#${i+2} ${t.name} (${t.cat})`).join('; ')}.`},
- {q:'How current is this ranking?',a:`This ranking was last reviewed on ${UPDATED}. Pricing is only stated when confirmed on the vendor's official pricing page; otherwise we link to the official site.`},
+ {q:'How current is this ranking?',a:`This ranking was last updated on ${UPDATED}. Pricing is only stated when confirmed on the vendor's official pricing page; otherwise we link to the official site.`},
  notForSale];};
 export const toolFaqs=t=>{const cs=casesFor(t.slug);return [
  {q:`What is ${t.name}?`,a:`${t.name} is a ${t.cat.toLowerCase()}. ${t.desc}`},

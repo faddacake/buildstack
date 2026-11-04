@@ -21,5 +21,5 @@ const ranks=cs.map(u=>({u,r:u.rank.indexOf(t.slug)+1}));
 <aside class="card" style="margin:24px 0"><h2 style="margin-top:0;font-size:22px">Get alerted when {t.name} changes</h2><p>The Friday Verdict flags ranking, pricing and security changes to the tools you use.</p><a class="btn btn-p" href="#friday-verdict">Subscribe free</a> <a class="small" href={`${NEWSLETTER}/subscribe?utm_source=buildjury&utm_medium=tool&utm_campaign=${t.slug}`} rel="noopener">or on beehiiv →</a></aside>
 {cmp.length>0 && <Fragment><h2>Compare</h2><ul>{cmp.map(c=><li><a href={`/compare/${c.slug}/`}>{c.title}</a></li>)}</ul></Fragment>}
 {alts.length>0 && <Fragment><h2>Alternatives to {t.name}</h2><ul>{alts.map(a=><li><a href={`/tools/${a.slug}/`}>{a.name}</a> <span class="muted">({a.cat})</span></li>)}</ul></Fragment>}
-<p class="byline">Reviewed by <a href="/about/">{EDITOR}</a>: {EDITOR_BIO}</p>
+<p class="byline">Edited by <a href="/about/">{EDITOR}</a>: {EDITOR_BIO}</p>
 </Base>

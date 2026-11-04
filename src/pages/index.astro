@@ -13,7 +13,7 @@ const faqs=[
  qa('terminal-coding-agents','What is the best terminal (CLI) coding agent?'),
  qa('open-source-coding-agents','What is the best open-source AI coding agent?'),
  qa('mcp-servers','What are the best MCP servers for Claude and Cursor?'),
- {q:'How often is BuildJury updated?',a:`BuildJury reviews its rankings weekly; ${AS_OF.toLowerCase()} the last review was ${fmt(UPDATED)}.`},
+ {q:'How often is BuildJury updated?',a:`BuildJury updates its rankings weekly; ${AS_OF.toLowerCase()} the last review was ${fmt(UPDATED)}.`},
  {q:'Are BuildJury rankings paid placements?',a:`No. ${AS_OF}, BuildJury rankings are never for sale. Any sponsored placement is always labeled "Sponsored", never carries a rank number and does not affect rank.`}];
 const P=Object.fromEntries(useCases.map(u=>[u.slug,{title:u.title,top:u.rank.slice(0,3).map(s=>({s,n:toolBy[s].name,d:toolBy[s].desc})),rest:u.rank.slice(3).map(s=>toolBy[s].name)}]));
 const def=U('coding-in-existing-codebase');
@@ -27,7 +27,7 @@ const lastItems=record.map(n=>[n.date,n.tag]);
 <span class="stamp">VERDICT · {UPDATED}</span>
 <h1 class="hero-h1">Independent verdicts on AI build tools, by what you're building</h1>
 <p>Pick what you're building. We rank vibe-coding tools, AI app builders, agent frameworks and MCP servers with short, honest pros and cons. Rankings are never for sale. Updated <time datetime={UPDATED}>{fmt(UPDATED)}</time>.</p>
-<p class="trust">{tools.length} tools · {useCases.length} rulings · {comparisons.length} head-to-heads · Reviewed weekly · Never for sale</p>
+<p class="trust">{tools.length} tools · {useCases.length} rulings · {comparisons.length} head-to-heads · Updated weekly · Never for sale</p>
 <h2 class="sr">What are you building?</h2>
 <div class="chips" aria-label="What are you building?">{chipOrder.map(u=><a class="chip" href={`/use-cases/${u.slug}/`} data-pick={u.slug} aria-current={u.slug===def.slug?'true':undefined}>{u.short}</a>)}</div>
 </div>
@@ -63,6 +63,6 @@ const lastItems=record.map(n=>[n.date,n.tag]);
 <div class="card"><h3>Verified sources only</h3><p class="small">Every fact links to an official page, doc or changelog.</p></div>
 <div class="card"><h3>Conservative pricing</h3><p class="small">Prices only when confirmed on the official pricing page.</p></div>
 <div class="card"><h3>Never for sale</h3><p class="small">Sponsors get no say. Sponsored placements are always labeled.</p></div>
-<div class="card"><h3>Reviewed weekly</h3><p class="small">Changes are logged in The Record.</p></div>
+<div class="card"><h3>Updated weekly</h3><p class="small">Changes are logged in The Record.</p></div>
 </div><p><a href="/methodology/">Read the methodology →</a></p></section>
 </Base>

@@ -40,7 +40,7 @@ const presented = sponsorFor('newsletter');
 <div class="wrap">
 {crumbs && <nav class="crumbs" aria-label="Breadcrumb"><ol>{crumbs.map(([n,p],i)=>(i === last ? <li aria-current="page">{n}</li> : <li><a href={p}>{n}</a></li>))}</ol></nav>}
 <main id="main">
-{reviewed && <p class="reviewed">Last reviewed <time datetime={UPDATED}>{fmt(UPDATED)}</time> · Reviewed weekly</p>}
+{reviewed && <p class="reviewed">Last updated <time datetime={UPDATED}>{fmt(UPDATED)}</time> · Updated weekly</p>}
 <slot/>
 {faqs && <section aria-labelledby="faq-h"><h2 id="faq-h">FAQ</h2>{faqs.map(f=><details><summary>{f.q}</summary><p>{f.a}</p></details>)}</section>}
 </main>
