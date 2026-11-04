@@ -1,4 +1,5 @@
 ---
+import Analytics from '@vercel/analytics/astro';
 import '../styles/global.css';
 import {sponsorFor,CONTACT,NEWSLETTER,SAMPLE_ISSUE,UPDATED,fmt} from '../lib.js';
 const { title, description, jsonld, crumbs, faqs, reviewed, ogTitle } = Astro.props;
@@ -61,4 +62,5 @@ const presented = sponsorFor('newsletter');
 </div>
 <dialog class="pal" id="pal" aria-label="Search BuildJury"><form method="dialog"><label class="sr" for="palq">Search tools, rulings and comparisons</label><input id="palq" type="search" placeholder="Search tools, rulings, comparisons…" autocomplete="off"/></form><ul id="palr" role="listbox"></ul><p class="small muted">Enter to open · Esc to close</p></dialog>
 <script is:inline src="/app.js" defer></script>
+<Analytics />
 </body></html>
