@@ -6,5 +6,6 @@ const cats=[...new Set(tools.map(t=>t.cat))].sort();
 ---
 <Base title={`All ${tools.length} AI building tools: coding agents, app builders, MCP servers | BuildJury`} description={`Every AI coding tool, vibe-coding app builder, agent framework and MCP server BuildJury tracks (${tools.length}), with pros, cons and official links.`} jsonld={[list,breadcrumb(Astro.site,crumbs)]} crumbs={crumbs}>
 <h1>All tools ({tools.length})</h1>
-{cats.map(c=><Fragment><h2>{c}</h2><div class="grid">{tools.filter(t=>t.cat===c).map(t=><a class="card" href={`/tools/${t.slug}/`}><strong>{t.name}</strong><p class="muted">{t.desc}</p></a>)}</div></Fragment>)}
+<p><label for="toolq" class="sr">Filter tools</label><input id="toolq" type="search" placeholder="Filter tools…" style="width:100%;max-width:420px"/></p>
+{cats.map(c=><Fragment><h2>{c}</h2><div class="grid">{tools.filter(t=>t.cat===c).map(t=><a class="card card-link" data-tool-card data-k={`${t.name} ${t.cat} ${(t.aka||[]).join(' ')}`.toLowerCase()} href={`/tools/${t.slug}/`}><strong>{t.name}</strong><p class="muted small">{t.desc}</p></a>)}</div></Fragment>)}
 </Base>

@@ -1,22 +1,68 @@
 ---
-import Base from '../layouts/Base.astro'; import {useCases,tools,toolBy,comparisons,NEWS,UPDATED} from '../data.js'; import {faqLd,notForSale} from '../seo.js';
+import Base from '../layouts/Base.astro'; import Record from '../components/Record.astro'; import CompareBuilder from '../components/CompareBuilder.astro'; import Sponsor from '../components/Sponsor.astro';
+import {lc,useCases,tools,toolBy,comparisons,UPDATED,record,movedThisWeek,sponsorFor,AS_OF,fmt} from '../lib.js'; import {faqLd,orgLd,websiteLd} from '../seo.js';
 const list={'@context':'https://schema.org','@type':'ItemList',name:'BuildJury: AI build tool verdicts by use case',itemListElement:useCases.map((u,i)=>({'@type':'ListItem',position:i+1,name:u.title,url:new URL(`/use-cases/${u.slug}/`,Astro.site).href}))};
-const org={'@context':'https://schema.org','@type':'WebSite',name:'BuildJury',url:Astro.site.href,description:'Independent, never-for-sale rankings of AI coding tools, vibe-coding app builders, agent frameworks and MCP servers by use case.',publisher:{'@type':'Organization',name:'BuildJury',url:Astro.site.href,email:'buildstack@mail.grokbot.com'}};
+const org={...websiteLd(Astro.site),publisher:orgLd(Astro.site)};
+const U=s=>useCases.find(u=>u.slug===s); const names=(u,n)=>u.rank.slice(0,n).map(s=>toolBy[s].name);
+const seq=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1];
+const qa=(slug,q)=>{const u=U(slug),n=names(u,4);return {q,a:`${AS_OF}, BuildJury ranks ${n[0]} #1 for ${lc(u.short)}, followed by ${seq(n.slice(1))}. ${u.intro}`}};
 const faqs=[
- {q:'What is BuildJury?',a:`BuildJury ranks ${tools.length} AI building tools (AI coding agents, vibe-coding app builders, agent frameworks and MCP servers) by use case, with short pros and cons and links to official sites.`},
- {q:'What is the best AI coding tool for an existing codebase?',a:`BuildJury currently ranks ${useCases.find(u=>u.slug==='coding-in-existing-codebase').rank.slice(0,4).map((s,i)=>`#${i+1} ${toolBy[s].name}`).join(', ')}.`},
- {q:'What is the best AI app builder for a SaaS MVP?',a:`BuildJury currently ranks ${useCases.find(u=>u.slug==='saas-mvp').rank.slice(0,3).map((s,i)=>`#${i+1} ${toolBy[s].name}`).join(', ')}.`},
- {q:'How often is BuildJury updated?',a:`Rankings are reviewed weekly. Last update: ${UPDATED}.`},
- notForSale];
+ {q:'What is BuildJury?',a:`BuildJury (buildjury.com) is an independent site that ranks ${tools.length} AI building tools (AI coding agents, vibe-coding app builders, agent frameworks and MCP servers) by use case, with short pros and cons and links to official sites. ${AS_OF}, it publishes ${useCases.length} rulings and ${comparisons.length} head-to-head comparisons.`},
+ qa('coding-in-existing-codebase','What is the best AI coding tool for an existing codebase?'),
+ qa('saas-mvp','What is the best AI app builder for a SaaS MVP?'),
+ qa('terminal-coding-agents','What is the best terminal (CLI) coding agent?'),
+ qa('open-source-coding-agents','What is the best open-source AI coding agent?'),
+ qa('mcp-servers','What are the best MCP servers for Claude and Cursor?'),
+ {q:'How often is BuildJury updated?',a:`BuildJury reviews its rankings weekly; ${AS_OF.toLowerCase()} the last review was ${fmt(UPDATED)}.`},
+ {q:'Are BuildJury rankings paid placements?',a:`No. ${AS_OF}, BuildJury rankings are never for sale. Any sponsored placement is always labeled "Sponsored", never carries a rank number and does not affect rank.`}];
+const P=Object.fromEntries(useCases.map(u=>[u.slug,{title:u.title,top:u.rank.slice(0,3).map(s=>({s,n:toolBy[s].name,d:toolBy[s].desc})),rest:u.rank.slice(3).map(s=>toolBy[s].name)}]));
+const def=U('coding-in-existing-codebase');
+const featured=sponsorFor('featured');
+const chipOrder=['landing-pages','saas-mvp','mobile-apps','internal-tools','ai-agents','chatbots','automation','coding-in-existing-codebase','terminal-coding-agents','agent-first-ides','open-source-coding-agents','mcp-servers'].map(U).filter(Boolean);
+const lastItems=record.map(n=>[n.date,n.tag]);
 ---
-<Base title="BuildJury: best AI coding tools, app builders & MCP servers by use case (2026)" description={`Independent, never-for-sale rankings of ${tools.length} AI coding agents, vibe-coding app builders, agent frameworks and MCP servers, by what you want to build. Updated ${UPDATED}.`} jsonld={[org,list,faqLd(faqs)]} faqs={faqs}>
-<h1>Independent verdicts on AI build tools, by use case</h1>
-<p>Pick what you're building. We rank vibe-coding tools, AI app builders, agent frameworks and MCP servers with short, honest pros and cons. Rankings are never for sale. Updated {UPDATED}.</p>
-<h2 id="use-cases">Use cases</h2><div class="grid">
-{useCases.map(u=><a class="card" href={`/use-cases/${u.slug}/`}><strong>{u.short}</strong><p class="muted">{u.intro}</p><p class="muted">#1: {toolBy[u.rank[0]].name}</p></a>)}
+<Base title="BuildJury: best AI coding tools, app builders & MCP servers by use case (2026)" description={`Independent, never-for-sale rankings of ${tools.length} AI coding agents, vibe-coding app builders, agent frameworks and MCP servers, by what you want to build. Updated ${UPDATED}.`} jsonld={[org,orgLd(Astro.site),list,faqLd(faqs)]}>
+<section class="hero">
+<div class="hero-l">
+<span class="stamp">VERDICT · {UPDATED}</span>
+<h1 class="hero-h1">Independent verdicts on AI build tools, by what you're building</h1>
+<p>Pick what you're building. We rank vibe-coding tools, AI app builders, agent frameworks and MCP servers with short, honest pros and cons. Rankings are never for sale. Updated <time datetime={UPDATED}>{fmt(UPDATED)}</time>.</p>
+<p class="trust">{tools.length} tools · {useCases.length} rulings · {comparisons.length} head-to-heads · Reviewed weekly · Never for sale</p>
+<h2 class="sr">What are you building?</h2>
+<div class="chips" aria-label="What are you building?">{chipOrder.map(u=><a class="chip" href={`/use-cases/${u.slug}/`} data-pick={u.slug} aria-current={u.slug===def.slug?'true':undefined}>{u.short}</a>)}</div>
 </div>
-<h2>Head-to-head comparisons</h2><ul>{comparisons.map(c=><li><a href={`/compare/${c.slug}/`}>{c.title}</a></li>)}</ul>
-<h2>What's new</h2><ul>{NEWS.slice(0,5).map(n=><li><span class="muted">{n.date}</span> <a href={`/tools/${n.tool}/`}>{toolBy[n.tool].name}</a>: {n.text}</li>)}</ul>
-<p><a href="/news/">All updates →</a></p>
-<p>{tools.length} tools tracked. <a href="/tools/">See all tools →</a></p>
+<div class="hero-r"><div class="vpanel" id="vpanel" aria-live="polite">
+<p class="mono small muted">RULING</p>
+<h2 data-v-title>{def.title}</h2>
+<ol class="vlist" data-v-top>{def.rank.slice(0,3).map((s,i)=><li><span class="rk">{i+1}</span><div><a href={`/tools/${s}/`}><strong>{toolBy[s].name}</strong></a><div class="small muted">{toolBy[s].desc}</div></div></li>)}</ol>
+<p class="vrest" data-v-rest>Also ranked: {def.rank.slice(3).map((s,i)=>`#${i+4} ${toolBy[s].name}`).join(' · ')}</p>
+<p><a data-v-link href={`/use-cases/${def.slug}/`}><strong>Read the full ruling →</strong></a></p>
+<Sponsor s={featured} label="SPONSORED · Does not affect rank"/>
+</div></div>
+<script id="picker-data" type="application/json" data-default={def.slug} set:html={JSON.stringify(P)}/>
+</section>
+<p class="lastbar" data-lastbar data-items={JSON.stringify(lastItems)}>Star tools to track them. We'll flag their changes here and in your Friday email.</p>
+
+<h2 id="rulings">All rulings</h2>
+<div class="grid">{useCases.map(u=><a class="card card-link" href={`/use-cases/${u.slug}/`}><h3>{u.short}</h3><p class="muted small">{u.intro}</p><p class="mono">#1 {toolBy[u.rank[0]].name}</p>{movedThisWeek(u) && <span class="pill">Moved this week</span>}</a>)}</div>
+
+<h2 id="compare">Head-to-head</h2>
+<CompareBuilder/>
+<div class="grid" style="margin-top:16px">{comparisons.map(c=><a class="card card-link" href={`/compare/${c.slug}/`}><h3>{c.title}</h3><p class="small muted">{c.verdict}</p></a>)}</div>
+
+<h2 id="record">The Record</h2>
+<Record items={record.slice(0,6)}/>
+<p><a href="/news/"><strong>All updates →</strong></a></p>
+
+<section aria-labelledby="qa-h"><h2 id="qa-h">Quick answers</h2>
+{faqs.map(f=><details><summary>{f.q}</summary><p>{f.a}</p></details>)}</section>
+
+<section aria-labelledby="how-h"><h2 id="how-h">How we rank</h2>
+<div class="grid">
+<div class="card"><h3>By use case</h3><p class="small">We rank per job, not overall.</p></div>
+<div class="card"><h3>Verified sources only</h3><p class="small">Every fact links to an official page, doc or changelog.</p></div>
+<div class="card"><h3>Conservative pricing</h3><p class="small">Prices only when confirmed on the official pricing page.</p></div>
+<div class="card"><h3>Never for sale</h3><p class="small">Sponsors get no say. Sponsored placements are always labeled.</p></div>
+<div class="card"><h3>Reviewed weekly</h3><p class="small">Changes are logged in The Record.</p></div>
+</div><p><a href="/methodology/">Read the methodology →</a></p></section>
 </Base>

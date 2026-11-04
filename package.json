@@ -1,5 +1,5 @@
 {
-  "name": "buildstack",
+  "name": "buildjury",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "astro": "^4.5.18"
   },
   "type": "module"

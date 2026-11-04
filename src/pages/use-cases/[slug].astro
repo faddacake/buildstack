@@ -1,20 +1,41 @@
 ---
-import Base from '../../layouts/Base.astro'; import {useCases,toolBy,comparisons,UPDATED} from '../../data.js'; import {breadcrumb,faqLd,useCaseFaqs,softwareLd} from '../../seo.js';
+import Base from '../../layouts/Base.astro'; import Watch from '../../components/Watch.astro'; import Sponsor from '../../components/Sponsor.astro';
+import {lc,useCases,toolBy,comparisons,UPDATED,movement,sponsorFor,compareSlug,EDITOR,AS_OF,fmt} from '../../lib.js'; import {breadcrumb,faqLd,useCaseFaqs,softwareLd,articleLd} from '../../seo.js';
 export function getStaticPaths(){return useCases.map(u=>({params:{slug:u.slug},props:{u}}))}
 const {u}=Astro.props; const list=u.rank.map(s=>toolBy[s]);
-const crumbs=[['Home','/'],['Use cases','/use-cases/'],[u.short,`/use-cases/${u.slug}/`]];
+const crumbs=[['Home','/'],['Rulings','/use-cases/'],[u.short,`/use-cases/${u.slug}/`]];
 const faqs=useCaseFaqs(u);
-const jsonld={'@context':'https://schema.org','@type':'ItemList',name:u.title,description:u.intro,dateModified:UPDATED,itemListOrder:'https://schema.org/ItemListOrderAscending',numberOfItems:list.length,itemListElement:list.map((t,i)=>({'@type':'ListItem',position:i+1,url:new URL(`/tools/${t.slug}/`,Astro.site).href,item:softwareLd(t,Astro.site)}))};
+const jsonld={'@context':'https://schema.org','@type':'ItemList',name:u.title,description:u.intro,dateModified:UPDATED,itemListOrder:'https://schema.org/ItemListOrderAscending',numberOfItems:list.length,itemListElement:list.map((t,i)=>({'@type':'ListItem',position:i+1,url:new URL(`/tools/${t.slug}/`,Astro.site).href,item:{...softwareLd(t,Astro.site),url:new URL(`/tools/${t.slug}/`,Astro.site).href}}))};
+const art=articleLd(Astro.site,{headline:`${u.title} (2026)`,description:u.intro,path:`/use-cases/${u.slug}/`,published:UPDATED,modified:UPDATED,author:EDITOR});
 const related=comparisons.filter(c=>u.rank.includes(c.a)&&u.rank.includes(c.b));
+const top2=compareSlug(u.rank[0],u.rank[1]);
 const others=useCases.filter(x=>x.slug!==u.slug);
+const mv=movement(u); const sp=sponsorFor('ruling',u.slug);
+const seq=a=>a.slice(0,-1).join(', ')+' and '+a[a.length-1];
 ---
-<Base title={`${u.title} (2026): ${list.slice(0,3).map(t=>t.name).join(' vs ')} | BuildJury`} description={`${u.intro} Ranked: ${list.map(t=>t.name).join(', ')}. Independent, updated ${UPDATED}.`} jsonld={[jsonld,breadcrumb(Astro.site,crumbs),faqLd(faqs)]} crumbs={crumbs} faqs={faqs}>
-<h1>{u.title}</h1><p>{u.intro} <span class="muted">Updated {UPDATED}.</span></p>
-<p><strong>Quick verdict:</strong> {list.slice(0,3).map((t,i)=>`#${i+1} ${t.name}`).join(', ')}.</p>
-{list.map((t,i)=><div class="card" style="margin:1rem 0"><h2><span class="rank">#{i+1}</span> <a href={`/tools/${t.slug}/`}>{t.name}</a></h2>
-<p>{t.desc}</p><p class="muted">{t.cat} · Pricing: {t.price}</p>
-<p><strong>Pros:</strong> {t.pros.join(' · ')}</p><p><strong>Cons:</strong> {t.cons.join(' · ')}</p>
-<a href={t.url} rel="noopener" target="_blank">Official site →</a></div>)}
+<Base title={`${u.title} (2026): ${list.slice(0,3).map(t=>t.name).join(' vs ')} | BuildJury`} description={`${u.intro} Ranked: ${list.map(t=>t.name).join(', ')}. Independent, updated ${UPDATED}.`} jsonld={[jsonld,art,breadcrumb(Astro.site,crumbs),faqLd(faqs)]} crumbs={crumbs} faqs={faqs} reviewed ogTitle={u.title}>
+<p class="mono small muted">RULING</p>
+<h1>{u.title} (2026)</h1>
+<p><strong>{AS_OF}, BuildJury ranks {list[0].name} #1 for {lc(u.short)}, followed by {seq(list.slice(1,4).map(t=>t.name))}.</strong> {u.intro}</p>
+<p class="byline">By {EDITOR} · <a href="/methodology/">How we rank</a></p>
+<section class="qv" aria-label="Quick verdict">
+<span class="stamp">VERDICT · {UPDATED}</span>
+<h2 style="margin:12px 0 6px;font-size:22px">Quick verdict</h2>
+<p class="top">{list.slice(0,3).map((t,i)=>`#${i+1} ${t.name}`).join(', ')}</p>
+<p>Pick <a href={`/tools/${list[0].slug}/`}>{list[0].name}</a> first: {list[0].desc} {list[1] && <Fragment>Runner-up <a href={`/tools/${list[1].slug}/`}>{list[1].name}</a>: {list[1].desc}</Fragment>}</p>
+<p class="small muted">Last reviewed <time datetime={UPDATED}>{fmt(UPDATED)}</time></p>
+</section>
+<h2>The ranking</h2>
+<ol class="ranked">{list.map((t,i)=><li><article class="entry" aria-labelledby={`e-${t.slug}`}>
+<div class="rk" aria-hidden="true">{i+1}</div>
+<div><h3 id={`e-${t.slug}`}><span class="sr">#{i+1} </span><a href={`/tools/${t.slug}/`}>{t.name}</a> {mv[t.slug] && <span class="move">{mv[t.slug].label} since {fmt(mv[t.slug].since)}</span>}</h3>
+<p class="small muted">{t.cat} · <span class="price">{t.price}</span></p>
+<p>{t.desc}</p>
+<div class="cols"><div class="favor" aria-label="Pros"><h4>In favor</h4><ul>{t.pros.map(p=><li>{p}</li>)}</ul></div><div class="object" aria-label="Cons"><h4>Objections</h4><ul>{t.cons.map(p=><li>{p}</li>)}</ul></div></div>
+<p><a href={t.url} rel="noopener" target="_blank">Official site →</a> <Watch slug={t.slug}/></p>
+</div></article></li>)}</ol>
+<Sponsor s={sp} label="SPONSORED · Not part of this ruling"/>
+{top2 && <p><a class="btn" href={`/compare/${top2.slug}/`}>Not sure? Compare the top two →</a></p>}
 {related.length>0 && <Fragment><h2>Head-to-head</h2><ul>{related.map(c=><li><a href={`/compare/${c.slug}/`}>{c.title}</a></li>)}</ul></Fragment>}
-<h2>Other use cases</h2><ul>{others.map(x=><li><a href={`/use-cases/${x.slug}/`}>{x.title}</a></li>)}</ul>
+<h2>Other rulings</h2><ul>{others.map(x=><li><a href={`/use-cases/${x.slug}/`}>{x.title}</a></li>)}</ul>
 </Base>
