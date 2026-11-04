@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro'; import Watch from '../../components/Watch.astro'; import Record from '../../components/Record.astro';
-import {tools,toolBy,casesFor,compareFor} from '../../data.js'; import {lc,record,EDITOR,UPDATED,NEWSLETTER,AS_OF} from '../../lib.js'; import {breadcrumb,faqLd,toolFaqs,softwareLd} from '../../seo.js';
+import {tools,toolBy,casesFor,compareFor} from '../../data.js'; import {lc,record,EDITOR,EDITOR_BIO,UPDATED,NEWSLETTER,AS_OF} from '../../lib.js'; import {breadcrumb,faqLd,toolFaqs,softwareLd} from '../../seo.js';
 export function getStaticPaths(){return tools.map(t=>({params:{slug:t.slug},props:{t}}))}
 const {t}=Astro.props; const cs=casesFor(t.slug); const cmp=compareFor(t.slug); const news=record.filter(n=>n.tool===t.slug);
 const alts=[...new Set(cs.flatMap(u=>u.rank))].filter(s=>s!==t.slug).slice(0,6).map(s=>toolBy[s]);
@@ -21,5 +21,5 @@ const ranks=cs.map(u=>({u,r:u.rank.indexOf(t.slug)+1}));
 <aside class="card" style="margin:24px 0"><h2 style="margin-top:0;font-size:22px">Get alerted when {t.name} changes</h2><p>The Friday Verdict flags ranking, pricing and security changes to the tools you use.</p><a class="btn btn-p" href="#friday-verdict">Subscribe free</a> <a class="small" href={`${NEWSLETTER}/subscribe?utm_source=buildjury&utm_medium=tool&utm_campaign=${t.slug}`} rel="noopener">or on beehiiv →</a></aside>
 {cmp.length>0 && <Fragment><h2>Compare</h2><ul>{cmp.map(c=><li><a href={`/compare/${c.slug}/`}>{c.title}</a></li>)}</ul></Fragment>}
 {alts.length>0 && <Fragment><h2>Alternatives to {t.name}</h2><ul>{alts.map(a=><li><a href={`/tools/${a.slug}/`}>{a.name}</a> <span class="muted">({a.cat})</span></li>)}</ul></Fragment>}
-<p class="byline">Reviewed by {EDITOR}</p>
+<p class="byline">Reviewed by <a href="/about/">{EDITOR}</a>: {EDITOR_BIO}</p>
 </Base>

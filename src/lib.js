@@ -1,7 +1,8 @@
 // Derived data for the redesign. Content (ranks, verdicts, pros, cons, prices, dates, sources) stays in data.js.
 import {tools,useCases,comparisons,NEWS,toolBy,UPDATED} from './data.js';
 import sponsors from '../data/sponsors.json';
-export const EDITOR='[EDITOR NAME]';
+export const EDITOR='Ben Harrelson';
+export const EDITOR_BIO='Independent AI builder focused on shipping practical products that generate consistent revenue without outside funding. Medically retired U.S. Marine. Currently exploring agentic systems, AI tooling, and ways to turn real output into sustainable income streams.';
 export const CONTACT='[CONTACT EMAIL @buildjury.com]';
 // Working inbox used by mailto form actions until the @buildjury.com mailbox exists (owner decision).
 export const FORM_INBOX='buildstack@mail.grokbot.com';

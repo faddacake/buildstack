@@ -1,13 +1,13 @@
 ---
-import Base from '../../layouts/Base.astro'; import {EDITOR,CONTACT,UPDATED} from '../../lib.js'; import {breadcrumb,orgLd} from '../../seo.js';
+import Base from '../../layouts/Base.astro'; import {EDITOR,EDITOR_BIO,CONTACT,UPDATED} from '../../lib.js'; import {breadcrumb,orgLd} from '../../seo.js';
 const crumbs=[['Home','/'],['About','/about/']];
-const page={'@context':'https://schema.org','@type':'AboutPage',name:'About BuildJury',url:new URL('/about/',Astro.site).href,dateModified:UPDATED,mainEntity:orgLd(Astro.site),author:{'@type':'Person',name:EDITOR}};
+const page={'@context':'https://schema.org','@type':'AboutPage',name:'About BuildJury',url:new URL('/about/',Astro.site).href,dateModified:UPDATED,mainEntity:orgLd(Astro.site),author:{'@type':'Person',name:EDITOR,description:EDITOR_BIO,url:new URL('/about/',Astro.site).href}};
 ---
 <Base title="About BuildJury: who runs it and why it's independent" description="Who runs BuildJury, how rankings are made, and why rankings are never for sale." jsonld={[page,breadcrumb(Astro.site,crumbs)]} crumbs={crumbs}>
 <h1>About BuildJury</h1>
 <p><strong>BuildJury (buildjury.com) is an independent guide that ranks AI build tools by what you are building, and its rankings are never for sale.</strong></p>
 <h2>Who runs it</h2>
-<p>BuildJury is edited by {EDITOR}. [EDITOR BIO: 2 to 3 sentences on background and why they review these tools.]</p>
+<p>BuildJury is edited by {EDITOR}. {EDITOR_BIO}</p>
 <h2>Why it's independent</h2>
 <ul><li>No vendor can buy a rank, a verdict or a review.</li><li>Sponsored placements are always labeled "Sponsored" and sit outside ranked lists.</li><li>Every fact links to an official source. Prices appear only when confirmed on the official pricing page.</li></ul>
 <p>Read the full <a href="/methodology/">methodology</a>.</p>
