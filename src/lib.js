@@ -14,11 +14,13 @@ export const fmt=d=>{const [y,m,dd]=d.split('-').map(Number);return `${MON[m-1]}
 export const fmtLong=d=>{const [y,m,dd]=d.split('-').map(Number);return `${MONL[m-1]} ${dd}, ${y}`};
 export const AS_OF=`As of ${fmtLong(UPDATED)}`;
 // Record tags (classification only, text unchanged)
-export const tagOf=n=>/^security/i.test(n.text)?'security':/(pric|\$\d|plan|allowance|billing|subscription)/i.test(n.text)?'pricing':'release';
+export const tagOf=n=>n.tag?n.tag:/^security/i.test(n.text)?'security':/(pric|\$\d|plan|allowance|billing|subscription)/i.test(n.text)?'pricing':'release';
 export const TAGS={security:'Security',pricing:'Pricing',release:'Release'};
 export const record=NEWS.map(n=>({...n,tag:tagOf(n),id:`${n.date}-${n.tool}`})).sort((a,b)=>b.date.localeCompare(a.date));
 // Rank history: one snapshot per ruling until ranks change. Add {date,ranks} entries to HISTORY when a ruling moves.
-export const HISTORY={};
+export const HISTORY={
+ 'internal-tools':[{date:'2026-11-16',ranks:['retool','lovable','copilot-code','replit','n8n']},{date:'2026-11-23',ranks:['retool','lovable','copilot-code','replit','cursor','n8n']}],
+};
 export const historyFor=u=>HISTORY[u.slug]||[{date:UPDATED,ranks:u.rank}];
 const daysBetween=(a,b)=>(new Date(b)-new Date(a))/864e5;
 export const movement=u=>{const h=historyFor(u);if(h.length<2)return {};const prev=h[h.length-2];const out={};u.rank.forEach((s,i)=>{const p=prev.ranks.indexOf(s);if(p===-1)out[s]={label:'New',since:prev.date};else if(p!==i)out[s]={label:p>i?`▲${p-i}`:`▼${i-p}`,since:prev.date};});return out;};

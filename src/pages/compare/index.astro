@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro'; import CompareBuilder from '../../c
 const crumbs=[['Home','/'],['Compare','/compare/']];
 const list={'@context':'https://schema.org','@type':'ItemList',name:'AI tool comparisons',itemListElement:comparisons.map((c,i)=>({'@type':'ListItem',position:i+1,name:c.title,url:new URL(`/compare/${c.slug}/`,Astro.site).href}))};
 ---
-<Base title="AI coding tool comparisons (2026): Claude Code vs Cursor cost, OpenCode vs Claude Code, Lovable vs Bolt | BuildJury" description={`Independent head-to-head verdicts: ${comparisons.map(c=>c.title).join(', ')}.`} jsonld={[list,breadcrumb(Astro.site,crumbs)]} crumbs={crumbs}>
+<Base title="AI coding tool comparisons (2026): Kiro vs Cursor, Claude Code vs Cursor, Lovable vs Replit | BuildJury" description={`Independent head-to-head verdicts: ${comparisons.map(c=>c.title).join(', ')}.`} jsonld={[list,breadcrumb(Astro.site,crumbs)]} crumbs={crumbs}>
 <h1>Head-to-head comparisons</h1>
 <CompareBuilder/>
 <div class="grid" style="margin-top:16px">{comparisons.map(c=><div class="card"><h2 style="margin-top:0;font-size:22px"><a href={`/compare/${c.slug}/`}>{c.title}</a></h2><p class="small">{c.verdict}</p></div>)}</div>

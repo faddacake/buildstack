@@ -15,7 +15,7 @@ Add an entry to `data/sponsors.json`, then rebuild/redeploy (slots are resolved 
 `slot` is one of `strip` (site-wide bar), `featured` (homepage verdict panel, "Featured, not ranked"), `ruling` (card after the ranked list; limit with `useCases: ["mcp-servers"]`), `newsletter` ("Presented by" line). UTM parameters and `rel="sponsored noopener"` are added automatically. Sponsors never enter a ranked list.
 
 ## Add a Record entry
-Add `{date:'YYYY-MM-DD',tool:'<tool slug>',text:'…',src:'<official source URL>'}` to `NEWS` in `src/data.js`. The tag (Security / Pricing / Release) is inferred in `src/lib.js` (`tagOf`): text starting "Security" → Security; price/plan wording → Pricing; else Release.
+Add `{date:'YYYY-MM-DD',tool:'<tool slug>',text:'…',src:'<official source URL>'}` to `NEWS` in `src/data.js`. The tag (Security / Pricing / Release) is inferred in `src/lib.js` (`tagOf`): text starting "Security" → Security; price/plan wording → Pricing; else Release. Set `tag:'release'` (or `security`/`pricing`) on an entry to override when the wording misleads the heuristic (e.g. "plans the work").
 
 ## Update a ranking
 Edit the `rank` array of the ruling in `src/data.js` and bump `UPDATED`. To show "▲2 since …" and "Moved this week", add the previous and new orders to `HISTORY` in `src/lib.js`:
